@@ -1,1 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Analysis — HanapBuhay Job Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-2: #6366f1;
+      --accent: #22d3ee;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Cover Page ===== */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background:
+        radial-gradient(800px 400px at 20% 30%, rgba(99,102,241,.12), transparent),
+        radial-gradient(600px 300px at 80% 70%, rgba(34,211,238,.10), transparent),
+        linear-gradient(180deg, #0f172a, #1e293b);
+      color: #fff;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(99,102,241,.08);
+      top: -120px; right: -100px;
+      filter: blur(80px);
+    }
+    .cover-inner { position: relative; z-index: 2; max-width: 700px; }
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 999px; padding: 8px 18px; font-size: .78rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: #c7d2fe; margin-bottom: 24px;
+    }
+    .cover h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .cover h1 span {
+      background: linear-gradient(135deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+    }
+    .cover-sub {
+      font-size: 1.05rem; color: #94a3b8; max-width: 560px; margin: 0 auto 32px;
+    }
+    .cover-meta {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+      font-size: .88rem; color: #cbd5e1;
+    }
+    .cover-meta span { display: flex; align-items: center; gap: 6px; }
+    .cover-meta i { color: #818cf8; }
+
+    /* ===== Main Content ===== */
+    .content-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ===== Section ===== */
+    .section {
+      margin-bottom: 48px;
+    }
+    .section-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 10px; font-weight: 800; font-size: .85rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff; margin-right: 10px; flex-shrink: 0;
+    }
+    .section h2 {
+      display: flex; align-items: center;
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 20px; color: var(--text);
+    }
+    .section h3 {
+      font-size: 1.1rem; font-weight: 700; color: var(--text);
+      margin: 28px 0 12px;
+      padding-left: 14px;
+      border-left: 3px solid var(--primary);
+    }
+
+    p, li {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+
+    strong { color: var(--text); }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    li { margin-bottom: 6px; }
+
+    /* ===== Table ===== */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: .88rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+    }
+    .styled-table thead th {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .styled-table tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .styled-table tbody tr:last-child td { border-bottom: none; }
+    .styled-table tbody tr:hover td { background: #f1f5f9; }
+
+    .color-swatch {
+      display: inline-block; width: 14px; height: 14px; border-radius: 4px;
+      vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,.08);
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: .82rem;
+      color: #6366f1;
+      font-family: 'Fira Code', 'Consolas', monospace;
+    }
+
+    .code-block {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: .82rem;
+      line-height: 1.6;
+      margin: 12px 0 20px;
+      overflow-x: auto;
+    }
+
+    /* ===== Rating Badges ===== */
+    .rating-strong {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: .75rem; font-weight: 700;
+      background: #dcfce7; color: #166534;
+    }
+    .rating-good {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: .75rem; font-weight: 700;
+      background: #e0f2fe; color: #075985;
+    }
+
+    /* ===== Info Boxes ===== */
+    .info-box {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin: 16px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,.03);
+    }
+    .info-box i {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .info-box p { margin: 0; }
+
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(34,211,238,.06));
+      border: 1px solid rgba(99,102,241,.15);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 24px;
+    }
+    .conclusion-box h3 {
+      border: none; padding-left: 0;
+      font-size: 1.15rem; margin-top: 0; margin-bottom: 12px;
+    }
+    .conclusion-box p { margin-bottom: 0; }
+
+    /* ===== Divider ===== */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 40px 0;
+    }
+
+    /* ===== Print ===== */
+    @media print {
+      .cover { min-height: auto; padding: 40px 24px; break-after: page; }
+      body { font-size: 11pt; }
+      .styled-table thead th { background: #334155 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-number { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-badge"><i class="fas fa-drafting-compass"></i> UI/UX Design Review</div>
+    <h1>Design Analysis:<br><span>HanapBuhay Job Portal</span></h1>
+    <p class="cover-sub">
+      Consistency, Visual Hierarchy, Layout, and Navigation Design Review
+    </p>
+    <div class="cover-meta">
+      <span><i class="fas fa-globe"></i> HanapBuhay — Modern Job Portal</span>
+      <span><i class="fas fa-calendar"></i> April 8, 2026</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== CONTENT ==================== -->
+<div class="content-wrap">
+
+  <!-- ===== SECTION 1 ===== -->
+  <div class="section">
+    <h2><span class="section-number">1</span> Consistency and Standards</h2>
+
+    <h3>1.1 Color Palette</h3>
+    <p>
+      The website maintains a <strong>consistent color system</strong> defined through CSS custom properties in
+      <code>world-class.css</code>:
+    </p>
+
+    <table class="styled-table">
+      <thead>
+        <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>--wc-bg</code></td>
+          <td><span class="color-swatch" style="background:#f8fafc"></span>#f8fafc</td>
+          <td>Page background</td>
+        </tr>
+        <tr>
+          <td><code>--wc-surface</code></td>
+          <td><span class="color-swatch" style="background:#ffffff"></span>#ffffff</td>
+          <td>Card / container backgrounds</td>
+        </tr>
+        <tr>
+          <td><code>--wc-text</code></td>
+          <td><span class="color-swatch" style="background:#0f172a"></span>#0f172a</td>
+          <td>Primary text (headings)</td>
+        </tr>
+        <tr>
+          <td><code>--wc-muted</code></td>
+          <td><span class="color-swatch" style="background:#475569"></span>#475569</td>
+          <td>Secondary / paragraph text</td>
+        </tr>
+        <tr>
+          <td><code>--wc-primary</code></td>
+          <td><span class="color-swatch" style="background:#2563eb"></span>#2563eb</td>
+          <td>Primary brand blue</td>
+        </tr>
+        <tr>
+          <td><code>--wc-primary-2</code></td>
+          <td><span class="color-swatch" style="background:#4f46e5"></span>#4f46e5</td>
+          <td>Secondary brand indigo</td>
+        </tr>
+        <tr>
+          <td><code>--wc-border</code></td>
+          <td><span class="color-swatch" style="background:#e2e8f0"></span>#e2e8f0</td>
+          <td>Default border color</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      These tokens are referenced across all pages, ensuring a <strong>unified Tailwind-inspired slate/indigo</strong> palette.
+      The primary gradient <code>linear-gradient(135deg, #3b82f6, #6366f1)</code> is reused in the hero search button,
+      the &ldquo;Post Job&rdquo; CTA button, navbar hover underlines, footer subscribe button, and job card accents &mdash;
+      creating a <strong>strong brand identity</strong> throughout the site. There is a minor inconsistency: some older
+      inner-page heroes (About, Contact, Privacy) use a slightly different gradient overlay approach
+      (<code>radial-gradient</code> with <code>rgba(99,102,241,.22)</code>) while the index hero uses a distinct
+      animated-shapes approach. However, the overall color feel remains cohesive.
+    </p>
+
+    <h3>1.2 Typography</h3>
+    <p>All pages share a single font stack defined globally in the body rule:</p>
+
+    <div class="code-block">font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;</div>
+
+    <p>
+      Headings consistently use <code>letter-spacing: -0.02em</code> and <code>font-weight: 800</code> for section titles,
+      <code>700</code> for card titles, and <code>600</code> for nav links and labels.
+      This three-tier weight system is applied uniformly across the index page (hero title, section titles, job card titles),
+      the Companies page (<code>.ch-title</code>, <code>.company-title</code>), the About page
+      (<code>.section-title</code>, <code>.stat-box .number</code>), and the Contact page
+      (<code>.contact-label</code>). The readable font toggle in the accessibility widget offers Verdana as an
+      alternative, maintaining legibility standards.
+    </p>
+
+    <h3>1.3 Button Styles</h3>
+    <p>Buttons follow a <strong>consistent design language</strong> set in <code>world-class.css</code>:</p>
+    <ul>
+      <li><strong>Border-radius:</strong> <code>10px</code> globally (pill <code>999px</code> for specific CTAs like <code>.btn-post</code>, <code>.btn-gradient</code>)</li>
+      <li><strong>Font-weight:</strong> <code>600</code> across all button variants</li>
+      <li><strong>Primary buttons:</strong> Use the brand gradient background with no border</li>
+      <li><strong>Outline buttons:</strong> Use <code>#818cf8</code> or <code>#2563eb</code> border with transparent background</li>
+      <li><strong>Hover effect:</strong> Consistent <code>brightness(1.05)</code> filter and <code>translateY(-2px)</code> lift</li>
+    </ul>
+    <p>
+      This is applied uniformly to the search button, &ldquo;View All Jobs,&rdquo; pagination links,
+      &ldquo;View Profile&rdquo; buttons on company cards, and the Contact form submit button.
+    </p>
+
+    <h3>1.4 Spacing and Section Structure</h3>
+    <p>
+      The <code>world-class.css</code> enforces consistent section spacing with
+      <code>.site-section { padding-top: 4.5rem; padding-bottom: 4.5rem; }</code>. All pages use
+      Bootstrap&rsquo;s <code>.container</code> with a <code>max-width: 1200px</code> cap.
+      Card border-radius is standardized at <code>14px</code> (<code>--wc-radius</code>) for
+      <code>.card</code>, <code>.job-post-item</code>, <code>.rj-card</code>, <code>.sv-card</code>,
+      and <code>.emp-card</code>. The Companies page cards use the same <code>14px</code> radius.
+      This creates a visually predictable rhythm as users navigate between pages.
+    </p>
+
+    <h3>1.5 Navigation Menu</h3>
+    <p>
+      The <strong>navigation bar is identical across every page</strong> because it is loaded from a single shared PHP
+      include file (<code>includes/header.php</code>). It features:
+    </p>
+    <ul>
+      <li>Logo on the left</li>
+      <li>Menu items: Home, About, Contact, Privacy, Fresh Grads, FAQs, Companies, Explore Jobs</li>
+      <li>Active page highlighting via a PHP <code>$currentPage</code> variable and an <code>active</code> class</li>
+      <li>Consistent underline hover animation (gradient <code>scaleX</code> from right to left)</li>
+      <li>User chip dropdown (avatar + name) for logged-in users with pill border-radius</li>
+      <li>Notification bell with red badge counter</li>
+      <li>Mobile hamburger menu with slide-in drawer</li>
+    </ul>
+    <p>
+      The <strong>footer</strong> is equally shared via <code>includes/footer.php</code>, presenting four consistent
+      columns (For Job Seekers, For Employers, Company, Contact) with a dark <code>#0b1220</code> background and
+      gradient newsletter bar. Every page loads the same footer structure.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ===== SECTION 2 ===== -->
+  <div class="section">
+    <h2><span class="section-number">2</span> Visual Hierarchy</h2>
+
+    <p>The site demonstrates strong visual hierarchy:</p>
+
+    <div class="info-box">
+      <i class="fas fa-heading"></i>
+      <p>
+        <strong>Hero sections</strong> command attention with large bold headings
+        (<code>clamp(2.5rem, 6vw, 4.5rem)</code> on the index, <code>3rem</code> on inner pages),
+        high-contrast white text on dark overlays, and background imagery. This immediately tells the
+        user which page they are on and what the primary action is.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-tag"></i>
+      <p>
+        <strong>Section badges</strong> (e.g., &ldquo;Fresh Opportunities,&rdquo; &ldquo;AI-Powered&rdquo;)
+        use small pill-shaped labels with indigo backgrounds positioned above section titles, creating a
+        clear scanning pattern: badge &rarr; title &rarr; subtitle &rarr; content.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-id-card"></i>
+      <p>
+        <strong>Job cards</strong> use a grid layout with a clear information hierarchy: company logo &rarr;
+        job title (bold, <code>700</code>) &rarr; company name and location (gray, <code>#64748b</code>) &rarr;
+        posted date (small, lighter) &rarr; deadline chip (color-coded: green, amber, red). The eye
+        naturally flows from the most important information (what job) to the least important (deadline details).
+      </p>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-mouse-pointer"></i>
+      <p>
+        <strong>CTA buttons</strong> use the bright primary gradient to stand out from the neutral
+        backgrounds, ensuring call-to-action elements are the most visually prominent interactive
+        elements on any page.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-chart-bar"></i>
+      <p>
+        <strong>Platform statistics</strong> use large bold numbers with gradient text coloring to draw
+        attention to social proof metrics.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ===== SECTION 3 ===== -->
+  <div class="section">
+    <h2><span class="section-number">3</span> Layout Design</h2>
+
+    <p>The layout follows a <strong>consistent structural pattern</strong> across all pages:</p>
+
+    <table class="styled-table">
+      <thead>
+        <tr><th>#</th><th>Layer</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Shared navbar</td><td>Sticky, blurred backdrop, consistent across all pages</td></tr>
+        <tr><td><strong>2</strong></td><td>Hero section</td><td>Full-width, dark overlay with centered content</td></tr>
+        <tr><td><strong>3</strong></td><td>Content sections</td><td>Containerized, 1200px max, alternating white/light gray backgrounds</td></tr>
+        <tr><td><strong>4</strong></td><td>Shared footer</td><td>Dark four-column grid with newsletter bar</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      This F-pattern / Z-pattern-friendly layout ensures users always know where they are.
+      The index page uses a card-based grid (<code>col-md-6 col-lg-4</code>) for companies and a
+      list-based layout for job listings &mdash; both responsive via Bootstrap&rsquo;s 12-column grid system.
+      The site is fully responsive: cards stack to single-column on mobile, the navbar collapses to a
+      hamburger menu, and the hero text scales down with <code>clamp()</code> and media queries at
+      <code>992px</code>, <code>768px</code>, and <code>576px</code> breakpoints.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ===== SECTION 4 ===== -->
+  <div class="section">
+    <h2><span class="section-number">4</span> Navigation Design</h2>
+
+    <ul>
+      <li><strong>Primary navigation:</strong> Top navbar with 8 main links, always visible on desktop, collapsible on mobile. Active state is clearly indicated with the <code>active</code> class and a blue underline.</li>
+      <li><strong>Secondary navigation:</strong> User dropdown menu provides profile, dashboard, saved/applied jobs, and logout access.</li>
+      <li><strong>Utility navigation:</strong> Notification bell with real-time badge count, breadcrumbs on inner pages (About, Contact, Privacy).</li>
+      <li><strong>In-page navigation:</strong> The index page hero includes a smooth-scroll indicator (&ldquo;Scroll&rdquo;) pointing to the jobs section. Trending search chips provide quick keyword navigation. The Companies page has a segmented filter (All / Hiring now) and a live client-side search bar.</li>
+      <li><strong>Accessibility navigation:</strong> A floating accessibility widget (bottom-left) provides dark mode, font size, and readable font controls with keyboard support (<code>tabindex</code>, ARIA roles, <code>Escape</code> key to close).</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ===== SECTION 5 ===== -->
+  <div class="section">
+    <h2><span class="section-number">5</span> Summary of Findings</h2>
+
+    <table class="styled-table">
+      <thead>
+        <tr><th>Criteria</th><th>Rating</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Color consistency</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Unified palette via CSS variables; minor gradient variation on hero overlays</td>
+        </tr>
+        <tr>
+          <td><strong>Font consistency</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Single font stack; consistent weight hierarchy across all pages</td>
+        </tr>
+        <tr>
+          <td><strong>Button consistency</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Global styles in <code>world-class.css</code>; uniform radius, weight, hover</td>
+        </tr>
+        <tr>
+          <td><strong>Layout consistency</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Shared header/footer; Bootstrap grid; 1200px max container</td>
+        </tr>
+        <tr>
+          <td><strong>Spacing consistency</strong></td>
+          <td><span class="rating-good">Good</span></td>
+          <td>Section padding standardized; some pages override with inline styles</td>
+        </tr>
+        <tr>
+          <td><strong>Navigation consistency</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Identical navbar/footer on every page; active state highlighting</td>
+        </tr>
+        <tr>
+          <td><strong>Visual hierarchy</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Clear hero &rarr; section &rarr; card flow; proper use of size, weight, color</td>
+        </tr>
+        <tr>
+          <td><strong>Responsiveness</strong></td>
+          <td><span class="rating-strong">Strong</span></td>
+          <td>Three breakpoints; mobile menu; scalable hero text with <code>clamp()</code></td>
+        </tr>
+        <tr>
+          <td><strong>Accessibility</strong></td>
+          <td><span class="rating-good">Good</span></td>
+          <td>Dark mode, font scaling, readable font, ARIA roles, keyboard nav</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Areas for Improvement</h3>
+    <ul>
+      <li>A few inner pages (Privacy, Companies) define page-specific styles via inline <code>&lt;style&gt;</code> blocks rather than external CSS files, which slightly reduces maintainability.</li>
+      <li>Some hero sections use slightly different overlay techniques (animated shapes vs. radial gradients), though the visual result is similar.</li>
+      <li>Inline <code>style</code> attributes on some elements (e.g., <code>style="background: #f8fafc"</code>) could be replaced with utility classes for better consistency.</li>
+    </ul>
+
+    <div class="conclusion-box">
+      <h3><i class="fas fa-check-circle" style="color: #22c55e; margin-right: 8px;"></i>Conclusion</h3>
+      <p>
+        Overall, the HanapBuhay website demonstrates a <strong>high degree of consistency and standards
+        compliance</strong> in its design. The use of CSS custom properties, shared PHP includes for
+        navigation and footer, a unified color palette, standardized typography, and consistent
+        card/button styling ensures that users experience a cohesive interface across all pages.
+        The visual hierarchy is well-structured, guiding the user&rsquo;s eye from hero sections to
+        content to calls-to-action. The layout is responsive and predictable, and navigation is clear
+        with proper active-state indicators and accessibility features. The design successfully follows
+        established UI/UX principles that promote usability, learnability, and trust.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
